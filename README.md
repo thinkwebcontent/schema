@@ -5,7 +5,7 @@ schema
 
 ---
 
-We aim to keep the original API without making breaking changes, but please read the (CHANGELOG)[https://github.com/thinkwebcontent/schema/blob/master/README.md] for details of the changes in this fork.
+We aim to keep the original API without making breaking changes, but please read the [CHANGELOG](https://github.com/thinkwebcontent/schema/blob/master/README.md) for details of the changes in this fork.
 
 ---
 
