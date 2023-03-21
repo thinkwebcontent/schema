@@ -1,16 +1,15 @@
 schema
 ======
-[![GoDoc](https://godoc.org/github.com/gorilla/schema?status.svg)](https://godoc.org/github.com/gorilla/schema)
-[![CircleCI](https://circleci.com/gh/gorilla/mux.svg?style=svg)](https://circleci.com/gh/gorilla/schema)
-[![Sourcegraph](https://sourcegraph.com/github.com/gorilla/schema/-/badge.svg)](https://sourcegraph.com/github.com/gorilla/schema?badge)
+
+**This project has been forked from [gorilla/schema](https://github.com/gorilla) which has been archived. The original project is no longer under active maintainenance. You can read more here: https://github.com/gorilla#gorilla-toolkit**
 
 ---
 
-**The Gorilla project has been archived, and is no longer under active maintainenance. You can read more here: https://github.com/gorilla#gorilla-toolkit**
+We aim to keep the original API without making breaking changes, but please read the [CHANGELOG](https://github.com/thinkwebcontent/schema/blob/master/CHANGELOG.md) for details of the changes in this fork.
 
 ---
 
-Package gorilla/schema converts structs to and from form values.
+Package thinkwebcontent/schema converts structs to and from form values.
 
 ## Example
 
