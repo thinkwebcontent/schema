@@ -2044,3 +2044,24 @@ func TestDecodeEmptyStringToPointer(t *testing.T) {
 		t.Fatal("Expected pointer value to remain nil for empty input")
 	}
 }
+
+func TestDecodeEmptyStringToPointerWithZeroEmpty(t *testing.T) {
+	data := map[string][]string{
+		"Value": []string{""},
+	}
+
+	s := struct {
+		Value *int `schema:"Value"`
+	}{}
+
+	decoder := NewDecoder()
+	decoder.ZeroEmpty(true)
+
+	if err := decoder.Decode(&s, data); err != nil {
+		t.Fatal("Error while decoding:", err)
+	}
+
+	if s.Value == nil || *s.Value != 0 {
+		t.Fatal("Expected pointer value to not be nil for empty input")
+	}
+}
