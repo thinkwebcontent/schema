@@ -1,3 +1,3 @@
-module github.com/gorilla/schema
+module github.com/thinkwebcontent/schema
 
 go 1.14
