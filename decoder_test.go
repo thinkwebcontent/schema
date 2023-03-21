@@ -1161,7 +1161,7 @@ type S12B struct {
 	ID []string
 }
 
-//Decode should not split on , into a slice for string only
+// Decode should not split on , into a slice for string only
 func TestCSVStringSlice(t *testing.T) {
 	data := map[string][]string{
 		"ID": {"0,1"},
@@ -1177,7 +1177,7 @@ func TestCSVStringSlice(t *testing.T) {
 	}
 }
 
-//Invalid data provided by client should not panic (github issue 33)
+// Invalid data provided by client should not panic (github issue 33)
 func TestInvalidDataProvidedByClient(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1848,8 +1848,8 @@ func TestComprehensiveDecodingErrors(t *testing.T) {
 		if expected := 123; dst.I2.J.P == nil || *dst.I2.J.P != expected {
 			t.Errorf("I2.J.P: expected %#v, got %#v", expected, dst.I2.J.P)
 		}
-		if expected := ""; dst.X.S1.P == nil || *dst.X.S1.P != expected {
-			t.Errorf("X.S1.P: expected %#v, got %#v", expected, dst.X.S1.P)
+		if dst.X.S1.P != nil {
+			t.Errorf("X.S1.P: expected nil, got %#v", dst.X.S1.P)
 		}
 		if expected := "abc"; dst.X.T.V != expected {
 			t.Errorf("X.T.V: expected %#v, got %#v", expected, dst.X.T.V)
@@ -2022,5 +2022,25 @@ func TestUnmashalPointerToEmbedded(t *testing.T) {
 	}
 	if !reflect.DeepEqual(expected, s.Value) {
 		t.Errorf("Expected %v errors, got %v", expected, s.Value)
+	}
+}
+
+func TestDecodeEmptyStringToPointer(t *testing.T) {
+	data := map[string][]string{
+		"Value": []string{""},
+	}
+
+	s := struct {
+		Value *int `schema:"Value"`
+	}{}
+
+	decoder := NewDecoder()
+
+	if err := decoder.Decode(&s, data); err != nil {
+		t.Fatal("Error while decoding:", err)
+	}
+
+	if s.Value != nil {
+		t.Fatal("Expected pointer value to remain nil for empty input")
 	}
 }

@@ -209,6 +209,16 @@ func (d *Decoder) decode(v reflect.Value, path string, parts []pathPart, values 
 	// Dereference if needed.
 	t := v.Type()
 	if t.Kind() == reflect.Ptr {
+		var hasNonEmptyValue bool
+		for _, value := range values {
+			if len(value) > 0 {
+				hasNonEmptyValue = true
+				break
+			}
+		}
+		if v.IsNil() && !d.zeroEmpty && !hasNonEmptyValue {
+			return nil
+		}
 		t = t.Elem()
 		if v.IsNil() {
 			v.Set(reflect.New(t))
