@@ -1848,8 +1848,8 @@ func TestComprehensiveDecodingErrors(t *testing.T) {
 		if expected := 123; dst.I2.J.P == nil || *dst.I2.J.P != expected {
 			t.Errorf("I2.J.P: expected %#v, got %#v", expected, dst.I2.J.P)
 		}
-		if dst.X.S1.P != nil {
-			t.Errorf("X.S1.P: expected nil, got %#v", dst.X.S1.P)
+		if expected := ""; dst.X.S1.P == nil || *dst.X.S1.P != expected {
+			t.Errorf("X.S1.P: expected %#v, got %#v", expected, dst.X.S1.P)
 		}
 		if expected := "abc"; dst.X.T.V != expected {
 			t.Errorf("X.T.V: expected %#v, got %#v", expected, dst.X.T.V)
@@ -2027,11 +2027,37 @@ func TestUnmashalPointerToEmbedded(t *testing.T) {
 
 func TestDecodeEmptyStringToPointer(t *testing.T) {
 	data := map[string][]string{
-		"Value": []string{""},
+		"PInt":     []string{""},
+		"PInt8":    []string{""},
+		"PInt16":   []string{""},
+		"PInt32":   []string{""},
+		"PInt64":   []string{""},
+		"PUInt":    []string{""},
+		"PUInt8":   []string{""},
+		"PUInt16":  []string{""},
+		"PUInt32":  []string{""},
+		"PUInt64":  []string{""},
+		"PFloat32": []string{""},
+		"PFloat64": []string{""},
+		"PBool":    []string{""},
+		"PString":  []string{""},
 	}
 
 	s := struct {
-		Value *int `schema:"Value"`
+		PInt     *int
+		PInt8    *int8
+		PInt16   *int16
+		PInt32   *int32
+		PInt64   *int64
+		PUInt    *uint
+		PUInt8   *uint8
+		PUInt16  *uint16
+		PUInt32  *uint32
+		PUInt64  *uint64
+		PFloat32 *float32
+		PFloat64 *float32
+		PBool    *bool
+		PString  *string
 	}{}
 
 	decoder := NewDecoder()
@@ -2040,18 +2066,83 @@ func TestDecodeEmptyStringToPointer(t *testing.T) {
 		t.Fatal("Error while decoding:", err)
 	}
 
-	if s.Value != nil {
-		t.Fatal("Expected pointer value to remain nil for empty input")
+	if s.PInt != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PInt))
+	}
+	if s.PInt8 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PInt8))
+	}
+	if s.PInt16 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PInt16))
+	}
+	if s.PInt32 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PInt32))
+	}
+	if s.PInt64 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PInt64))
+	}
+	if s.PUInt != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PUInt))
+	}
+	if s.PUInt8 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PUInt8))
+	}
+	if s.PUInt16 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PUInt16))
+	}
+	if s.PUInt32 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PUInt32))
+	}
+	if s.PUInt64 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PUInt64))
+	}
+	if s.PFloat32 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PFloat32))
+	}
+	if s.PFloat64 != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PFloat64))
+	}
+	if s.PBool != nil {
+		t.Fatalf("Expected nil value for type %s", reflect.TypeOf(s.PBool))
+	}
+	if expected := ""; !reflect.DeepEqual(&expected, s.PString) {
+		t.Fatalf("Expected \"\" for type %s", reflect.TypeOf(s.PString))
 	}
 }
 
 func TestDecodeEmptyStringToPointerWithZeroEmpty(t *testing.T) {
 	data := map[string][]string{
-		"Value": []string{""},
+		"PInt":     []string{""},
+		"PInt8":    []string{""},
+		"PInt16":   []string{""},
+		"PInt32":   []string{""},
+		"PInt64":   []string{""},
+		"PUInt":    []string{""},
+		"PUInt8":   []string{""},
+		"PUInt16":  []string{""},
+		"PUInt32":  []string{""},
+		"PUInt64":  []string{""},
+		"PFloat32": []string{""},
+		"PFloat64": []string{""},
+		"PBool":    []string{""},
+		"PString":  []string{""},
 	}
 
 	s := struct {
-		Value *int `schema:"Value"`
+		PInt     *int
+		PInt8    *int8
+		PInt16   *int16
+		PInt32   *int32
+		PInt64   *int64
+		PUInt    *uint
+		PUInt8   *uint8
+		PUInt16  *uint16
+		PUInt32  *uint32
+		PUInt64  *uint64
+		PFloat32 *float32
+		PFloat64 *float32
+		PBool    *bool
+		PString  *string
 	}{}
 
 	decoder := NewDecoder()
@@ -2061,7 +2152,46 @@ func TestDecodeEmptyStringToPointerWithZeroEmpty(t *testing.T) {
 		t.Fatal("Error while decoding:", err)
 	}
 
-	if s.Value == nil || *s.Value != 0 {
-		t.Fatal("Expected pointer value to not be nil for empty input")
+	if s.PInt == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PInt))
+	}
+	if s.PInt8 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PInt8))
+	}
+	if s.PInt16 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PInt16))
+	}
+	if s.PInt32 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PInt32))
+	}
+	if s.PInt64 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PInt64))
+	}
+	if s.PUInt == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PUInt))
+	}
+	if s.PUInt8 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PUInt8))
+	}
+	if s.PUInt16 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PUInt16))
+	}
+	if s.PUInt32 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PUInt32))
+	}
+	if s.PUInt64 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PUInt64))
+	}
+	if s.PFloat32 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PFloat32))
+	}
+	if s.PFloat64 == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PFloat64))
+	}
+	if s.PBool == nil {
+		t.Fatalf("Expected zero value for type %s", reflect.TypeOf(s.PBool))
+	}
+	if expected := ""; !reflect.DeepEqual(&expected, s.PString) {
+		t.Fatalf("Expected \"\" for type %s", reflect.TypeOf(s.PString))
 	}
 }
