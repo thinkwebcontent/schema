@@ -210,7 +210,6 @@ func (d *Decoder) decode(v reflect.Value, path string, parts []pathPart, values 
 	t := v.Type()
 	if t.Kind() == reflect.Ptr {
 		if v.IsNil() && !d.zeroEmpty {
-			dereferencedType := reflect.Indirect(reflect.New(v.Type().Elem())).Kind()
 			var hasNonEmptyValue bool
 			for _, value := range values {
 				if len(value) > 0 {
@@ -218,7 +217,7 @@ func (d *Decoder) decode(v reflect.Value, path string, parts []pathPart, values 
 					break
 				}
 			}
-			if dereferencedType != reflect.String && !hasNonEmptyValue {
+			if !hasNonEmptyValue {
 				return nil
 			}
 		}
@@ -267,7 +266,10 @@ func (d *Decoder) decode(v reflect.Value, path string, parts []pathPart, values 
 
 		for key, value := range values {
 			if value == "" {
-				if d.zeroEmpty {
+				if (d.zeroEmpty && isPtrElem) || (!d.zeroEmpty && isPtrElem && len(values) > 1) {
+					items = append(items, reflect.Zero(reflect.PointerTo(elemT)))
+				}
+				if (!d.zeroEmpty && !isPtrElem) || (d.zeroEmpty && !isPtrElem) {
 					items = append(items, reflect.Zero(elemT))
 				}
 			} else if m.IsValid {
@@ -338,10 +340,18 @@ func (d *Decoder) decode(v reflect.Value, path string, parts []pathPart, values 
 		value := reflect.Append(reflect.MakeSlice(t, 0, 0), items...)
 		v.Set(value)
 	} else {
-		val := ""
-		// Use the last value provided if any values were provided
+		if len(values) > 1 {
+			return ConversionError{
+				Key:   path,
+				Type:  t,
+				Index: -1,
+			}
+		}
+
+		var val string
+
 		if len(values) > 0 {
-			val = values[len(values)-1]
+			val = values[0]
 		}
 
 		if conv != nil {

@@ -24,3 +24,28 @@ if err != nil {
 
 // Here form.Field == nil, not *0
 ```
+
+
+## Multiple Values for non slice fields
+
+Previously the last value for a given field would be used, this has been changed in favor of returning an error if multiple values are present for a non `slice` type
+
+e.g.
+```go
+type Form struct {
+    Field string
+}
+
+var form Form
+
+err = schema.NewDecoder().Decode(&form, url.Values{
+    "Field": []string{
+        "Value1",
+        "Value2",
+    }
+})
+
+if err != nil {
+    // err will not be nil as 2 values are present for the string field
+}
+```
