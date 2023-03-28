@@ -681,7 +681,7 @@ func TestEmptyValue(t *testing.T) {
 
 func TestEmptyValueZeroEmpty(t *testing.T) {
 	data := map[string][]string{
-		"F01": {"", ""},
+		"F01": {"", "foo"},
 	}
 	s := S5{}
 	d := NewDecoder()
